@@ -1,0 +1,30 @@
+{
+    "name": "DET Warning",
+    "description": "Warn designers when an element is used in a DET and changes to it may impact it.",
+    "namespace": "UWMadison\\detWarning",
+    "authors": [
+        {
+            "name": "Adam Nunez",
+            "email": "Adam.Nunez@ctri.wisc.edu",
+            "institution": "UW Madison - Center for Tobacco Research and Intervention "
+        }
+    ],
+    "permissions": [
+        "redcap_every_page_top"
+    ],
+    "project-settings": [
+        {
+            "key": "info",
+            "name": "To set an instrument's default form status go to the instrument's design page.<br><b>Note: </b>Unlike other instrument-based settings, default form status will be lost when an instrument is renamed.<br><br><a>Click here to view all saved configuration.</a>",
+            "type": "descriptive"
+        },
+        {
+            "key": "json",
+            "name": "<b>Json Object</b>",
+            "type": "textarea"
+        }
+    ],
+    "compatibility": {
+        "redcap-version-min": "9.8.0"
+    }
+}
