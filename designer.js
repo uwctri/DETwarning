@@ -4,6 +4,7 @@ $(document).ready(function () {
         #detWarningPre { padding-left: 40px; position: relative; font-size: 1.125em; }
         #detWarningPre .line { position: absolute; left: 10px; width: 30px; display: inline-block; }
         #openDETmodal { cursor: pointer; }
+        #detWarnDialog { display: none; }
     </style>
     `)
     
