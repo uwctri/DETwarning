@@ -32,7 +32,7 @@ class detWarning extends AbstractExternalModule {
         if (strpos(PAGE, 'Design/online_designer.php') !== false && $project_id != NULL && $_GET['page']) {
             $json = $this->loadJSON($_GET['page']);
             if ( empty($json) || ((strtotime('-1 day') - strtotime($json['loadDate'])) > 0) )
-                $json = parseDET();
+                $json = $this->parseDET($project_id);
             $this->passArgument('config',$json);
             $this->includeJs('designer.js');
             echo '<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/styles/default.min.css">';
@@ -44,7 +44,7 @@ class detWarning extends AbstractExternalModule {
             $this->includeJs('config.js');
     }
     
-    private function parseDET() {
+    private function parseDET($project_id) {
         global $data_entry_trigger_url;
 
         $base = explode('redcap', __file__)[0];
@@ -65,6 +65,7 @@ class detWarning extends AbstractExternalModule {
                     array_push($json['usedElements'], $field);
             }
         }
+        ExternalModules::setProjectSetting($this->module_prefix, $project_id, 'json', json_encode($json));
         return $json;
     }
     
