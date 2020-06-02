@@ -29,7 +29,7 @@ function decorateDETwarning() {
         $("#add_field_settings").prepend(`<span id="detWarnTop" class="mb-1"><b>DET Warning:</b> 
         This field is used on a Data Entry Trigger, review the code used <a id="openDETmodal">here</a> before making changes.</span><br><br>`);
         $('#openDETmodal').on('click', function() {
-            $('#detWarnDialog').dialog({ bgiframe: true, modal: true, width: 900,
+            $('#detWarnDialog').dialog({ bgiframe: true, modal: true, width: 900, height: 800,
                 buttons: [
                     { text: 'Close', click: function () { $(this).dialog('close'); } },
                 ]
