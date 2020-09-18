@@ -6,16 +6,6 @@ use ExternalModules\ExternalModules;
 
 use REDCap;
 
-function printToScreen($string) {
-?>
-    <script type='text/javascript'>
-       $(function() {
-          console.log(<?=json_encode($string); ?>);
-       });
-    </script>
-<?php
-}
-
 class detWarning extends AbstractExternalModule {
     
     private $module_prefix = 'det_warning';

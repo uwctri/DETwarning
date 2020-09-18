@@ -17,9 +17,10 @@ $(document).ready(function () {
     $("#detWarningCode").html( hljs.highlight('php', detWarning.config.content).value );
     addSourceLineNumbers();
     var _openAddQuesForm = openAddQuesForm;
-    openAddQuesForm = function(fieldName,a,b,c) {
-        _openAddQuesForm(fieldName,a,b,c);
-        if ( detWarning.config.usedElements.includes(fieldName) )
+    openAddQuesForm = function(sq_id,question_type,section_header,signature) {
+        $("#detWarnTop").remove();
+        _openAddQuesForm(sq_id,question_type,section_header,signature);
+        if ( detWarning.config.usedElements.includes(sq_id) && !(question_type == "" && section_header == 0) )
             decorateDETwarning();
     }
 });
@@ -27,7 +28,7 @@ $(document).ready(function () {
 function decorateDETwarning() {
     if ( !$("#detWarnTop").length ) {
         $("#add_field_settings").prepend(`<span id="detWarnTop" class="mb-1"><b>DET Warning:</b> 
-        This field is used on a Data Entry Trigger, review the code used <a id="openDETmodal">here</a> before making changes.</span><br><br>`);
+        This field is used on a Data Entry Trigger, review the code used <a id="openDETmodal">here</a> before making changes.<br><br></span>`);
         $('#openDETmodal').on('click', function() {
             $('#detWarnDialog').dialog({ bgiframe: true, modal: true, width: 900, height: 800,
                 buttons: [
