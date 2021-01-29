@@ -1,54 +1,77 @@
+detWarning.css = `
+<style>
+    #detWarningPre { padding-left: 40px; position: relative; font-size: 1.125em; }
+    #detWarningPre .line { position: absolute; left: 10px; width: 30px; display: inline-block; }
+    #openDETmodal { cursor: pointer; }
+    #detWarnDialog { display: none; }
+</style>`;
+
+detWarning.html = {};
+detWarning.html.bottom = `<i id="detWarnBottom" title="DET Warning" class="fas fa-exclamation-triangle mr-3 mt-2 fa-2x"></i>`;
+detWarning.html.top = `
+<span id="detWarnTop" class="mb-1">
+    <b>DET Warning:</b> This field is used on a Data Entry Trigger, review the code used <a id="openDETmodal">here</a> before making changes.<br><br>
+</span>`;
+detWarning.html.topNoLink = `
+<span id="detWarnTop" class="mb-1">
+    <b>DET Warning:</b> This field is used on a Data Entry Trigger! Changes may have unintended complications.<br><br>
+</span>`;
+detWarning.html.modal = `
+<div id="detWarnDialog" title="DET Warning">
+    <pre id="detWarningPre" class="line-numbers mb-0"> 
+        <code id="detWarningCode" class="language-php"></code>
+    </pre>
+</div>`;
+
 $(document).ready(function () {
-    $('head').append(`
-    <style>
-        #detWarningPre { padding-left: 40px; position: relative; font-size: 1.125em; }
-        #detWarningPre .line { position: absolute; left: 10px; width: 30px; display: inline-block; }
-        #openDETmodal { cursor: pointer; }
-        #detWarnDialog { display: none; }
-    </style>
-    `)
+    $('head').append(detWarning.css);
+    $('body').after(detWarning.html.modal);
     
-    $('body').after(`
-    <div id="detWarnDialog" title="DET Warning">
-        <pre id="detWarningPre" class="line-numbers language-php mb-0"> 
-<code id="detWarningCode" class="language-php"></code>
-        </pre>
-    </div>`);
     $("#detWarningCode").html( hljs.highlight('php', detWarning.config.content).value );
-    addSourceLineNumbers();
-    var _openAddQuesForm = openAddQuesForm;
+    addLineNumbers();
+    let _openAddQuesForm = openAddQuesForm;
+    
     openAddQuesForm = function(sq_id,question_type,section_header,signature) {
         $("#detWarnTop").remove();
         _openAddQuesForm(sq_id,question_type,section_header,signature);
-        if ( detWarning.config.usedElements.includes(sq_id) && !(question_type == "" && section_header == 0) )
+        if ( detWarning.config.usedElements.includes(sq_id) && !(question_type == "" && section_header == 0) ) {
             decorateDETwarning();
+        }
     }
 });
 
 function decorateDETwarning() {
-    if ( !$("#detWarnTop").length ) {
-        $("#add_field_settings").prepend(`<span id="detWarnTop" class="mb-1"><b>DET Warning:</b> 
-        This field is used on a Data Entry Trigger, review the code used <a id="openDETmodal">here</a> before making changes.<br><br></span>`);
+    
+    if ( !$("#detWarnTop").length && detWarning.config.content ) {
+        $("#add_field_settings").prepend(detWarning.html.top);
         $('#openDETmodal').on('click', function() {
-            $('#detWarnDialog').dialog({ bgiframe: true, modal: true, width: 900, height: 800,
-                buttons: [
-                    { text: 'Close', click: function () { $(this).dialog('close'); } },
-                ]
+            $('#detWarnDialog').dialog({
+                bgiframe: true, modal: true, width: 900, height: 800,
+                buttons: [{ 
+                    text: 'Close', 
+                    click: function () { $(this).dialog('close'); } 
+                }]
             });
         });
+    } else if ( !$("#detWarnTop").length ) {
+        $("#add_field_settings").prepend(detWarning.html.topNoLink);
     }
-    if ( !$("#detWarnBottom").length )
-        $(".ui-dialog-buttonset").append('<i id="detWarnBottom" title="DET Warning" class="fas fa-exclamation-triangle mr-3 mt-2 fa-2x"></i>');
-    if ( !$("#detWarnTop").length || !$("#detWarnBottom").length )
+    
+    if ( !$("#detWarnBottom").length ) {
+        $(".ui-dialog-buttonset").append(detWarning.html.bottom);
+    }
+    
+    // Some slower computers might have an issue with the JS load. Run this again if so.
+    if ( !$("#detWarnTop").length || !$("#detWarnBottom").length ) {
         setTimeout( decorateDETwarning, 100 );
+    }
 }
 
-function addSourceLineNumbers() {
-    let prefix = 'prefix';
-    let l = 0;
-    let result = $("#detWarningPre").html().trim().replace(/\n/g, function() {
-                l++;
-                return "\n" + '<a class="line" name="' + prefix + l + '">' + l + '</a>';
-            });
-    $("#detWarningPre").html('<a class="line" name="' + prefix + '0">0</a>' + result);
+function addLineNumbers() {
+    let l = 1;
+    $("#detWarningPre").html('<span class="line" name="ln0">0</span>'+
+        $("#detWarningPre").html().trim().replace(/\n/g, function() {
+            return `\n<span class="line" name="ln${l}">${l++}</span>`;
+        })
+    );
 }

@@ -1,11 +1,9 @@
 $(document).ready(function() {
     console.log("Loaded DET Warning config")
-    var pid = (new URLSearchParams(window.location.search)).get('pid');
-    var url = window.location.href.split('/').slice(0,5).join('/');
     var $modal = $('#external-modules-configure-modal');
     $modal.on('show.bs.modal', function() {
-        // Making sure we are overriding this modules's modal only.
-        if ($(this).data('module') !== detWarning.modulePrefix)
+        // Making sure we are overriding this module's modal only.
+        if ($(this).data('module') !== detWarning.prefix)
             return;
     
         if (typeof ExternalModules.Settings.prototype.resetConfigInstancesOld === 'undefined')
@@ -14,7 +12,7 @@ $(document).ready(function() {
         ExternalModules.Settings.prototype.resetConfigInstances = function() {
             ExternalModules.Settings.prototype.resetConfigInstancesOld();
             
-            if ($modal.data('module') !== detWarning.modulePrefix)
+            if ($modal.data('module') !== detWarning.prefix)
                 return;
             
             $modal.find('thead').remove();
@@ -26,13 +24,11 @@ $(document).ready(function() {
     });
     
     $modal.on('hide.bs.modal', function() {
-        // Making sure we are overriding this modules's modal only.
-        if ($(this).data('module') !== detWarning.modulePrefix)
+        // Making sure we are overriding this module's modal only.
+        if ($(this).data('module') !== detWarning.prefix)
             return;
 
         if (typeof ExternalModules.Settings.prototype.resetConfigInstancesOld !== 'undefined')
             ExternalModules.Settings.prototype.resetConfigInstances = ExternalModules.Settings.prototype.resetConfigInstancesOld;
-
-        $modal.removeClass('defaultFormStatusConfig');
     });
 });

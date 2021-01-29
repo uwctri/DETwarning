@@ -1,6 +1,6 @@
 {
     "name": "DET Warning",
-    "description": "Warn designers when an element is used in a DET and changes to it may impact it.",
+    "description": "Warn designers when an element is used in a DET and changes to it may have complications.",
     "namespace": "UWMadison\\detWarning",
     "authors": [
         {
@@ -12,10 +12,17 @@
     "permissions": [
         "redcap_every_page_top"
     ],
+    "system-settings": [
+        {
+            "key": "hide-code",
+            "name": "<b>Prevent end-users from reviewing the DET code</b>",
+            "type": "checkbox"
+        }
+    ],
     "project-settings": [
         {
             "key": "info",
-            "name": "To set an instrument's default form status go to the instrument's design page.<br><b>Note: </b>Unlike other instrument-based settings, default form status will be lost when an instrument is renamed.<br><br><a>Click here to view all saved configuration.</a>",
+            "name": "This module will warn you if a data element you are editing in the designer is being used in the project's DET. <br><b>Note: </b>Data elements are only searched for in the file immediately listed, imports are not checked. The file is scanned once a day for changes, to force a re-scan clear the below configuration.<br><br><a>Click here to view all saved configuration.</a>",
             "type": "descriptive"
         },
         {
