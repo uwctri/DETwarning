@@ -7,10 +7,11 @@ detWarning.css = `
 </style>`;
 
 detWarning.html = {};
+detWarning.functions = {};
 detWarning.html.bottom = `<i id="detWarnBottom" title="DET Warning" class="fas fa-exclamation-triangle mr-3 mt-2 fa-2x"></i>`;
 detWarning.html.top = `
 <span id="detWarnTop" class="mb-1">
-    <b>DET Warning:</b> This field is used on a Data Entry Trigger, review the code used <a id="openDETmodal">here</a> before making changes.<br><br>
+    <b>DET Warning:</b> This field is used on a Data Entry Trigger, review the code used <a id="openDETmodal"><u>here</u></a> before making changes.<br><br>
 </span>`;
 detWarning.html.topNoLink = `
 <span id="detWarnTop" class="mb-1">
@@ -28,19 +29,19 @@ $(document).ready(function () {
     $('body').after(detWarning.html.modal);
     
     $("#detWarningCode").html( hljs.highlight('php', detWarning.config.content).value );
-    addLineNumbers();
+    detWarning.functions.addLineNumbers();
     let _openAddQuesForm = openAddQuesForm;
     
     openAddQuesForm = function(sq_id,question_type,section_header,signature) {
         $("#detWarnTop").remove();
         _openAddQuesForm(sq_id,question_type,section_header,signature);
         if ( detWarning.config.usedElements.includes(sq_id) && !(question_type == "" && section_header == 0) ) {
-            decorateDETwarning();
+            detWarning.functions.decorateDETwarning();
         }
     }
 });
 
-function decorateDETwarning() {
+detWarning.functions.decorateDETwarning = function() {
     
     if ( !$("#detWarnTop").length && detWarning.config.content ) {
         $("#add_field_settings").prepend(detWarning.html.top);
@@ -67,7 +68,7 @@ function decorateDETwarning() {
     }
 }
 
-function addLineNumbers() {
+detWarning.functions.addLineNumbers = function() {
     let l = 1;
     $("#detWarningPre").html('<span class="line" name="ln0">0</span>'+
         $("#detWarningPre").html().trim().replace(/\n/g, function() {

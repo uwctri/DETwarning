@@ -3,17 +3,12 @@
 namespace UWMadison\detWarning;
 use ExternalModules\AbstractExternalModule;
 use ExternalModules\ExternalModules;
-
 use REDCap;
 
 class detWarning extends AbstractExternalModule {
     
     private $module_prefix = 'det_warning';
-    private $module_name = 'detWarning';
-    
-    public function __construct() {
-            parent::__construct();
-    }
+    private $module_global = 'detWarning';
     
     public function redcap_every_page_top($project_id) {
         $this->initGlobal();
@@ -21,12 +16,10 @@ class detWarning extends AbstractExternalModule {
         // Check if we are on the design page
         if (strpos(PAGE, 'Design/online_designer.php') !== false && $project_id != NULL && $_GET['page']) {
             $json = $this->loadJSON($_GET['page']);
-            
             // Only parse through the DET once a day, doing it every time for any large DET would be slow
             if ( empty($json) || empty($json["file"]) || ((strtotime('-1 day') - strtotime($json['loadDate'])) > 0) ) {
                 $json = $this->parseDET($project_id);
             }
-            
             $this->passArgument('config',$json);
             $this->includeJS('designer.js');
             $this->includeHilightJS();
@@ -41,8 +34,8 @@ class detWarning extends AbstractExternalModule {
     private function parseDET($project_id) {
         global $data_entry_trigger_url;
         
-        $base = explode('/redcap', APP_PATH_DOCROOT)[0];
-        $file = $base . str_replace('/',DIRECTORY_SEPARATOR,$data_entry_trigger_url);
+        $base = explode('redcap_', APP_PATH_DOCROOT)[0];
+        $file = $base . str_replace('/',DIRECTORY_SEPARATOR,trim($data_entry_trigger_url,'/'));
 
         $json = [
             'file' => $file,
@@ -54,7 +47,6 @@ class detWarning extends AbstractExternalModule {
             $json['file'] = "";
             return $json;
         }
-        
         $contents = file_get_contents($file);
         if ($contents) {
             $fields = REDCap::getFieldNames();
@@ -76,23 +68,22 @@ class detWarning extends AbstractExternalModule {
     
     private function loadJSON($instrument) {
         $json = $this->getProjectSetting('json');
-        $json = empty($json) ? null : (array)json_decode($json);
-        return $json;
+        return empty($json) ? null : (array)json_decode($json);
     }
     
     private function initGlobal() {
-        $data = array(
+        $data = json_encode([
             "prefix" => $this->module_prefix,
-        );
-        echo "<script>var ".$this->module_name." = ".json_encode($data).";</script>";
+        ]);
+        echo "<script>var {$this->module_global} = {$data};</script>";
     }
     
     private function passArgument($name, $value) {
-        echo "<script>".$this->module_name.".".$name." = ".json_encode($value).";</script>";
+        echo "<script>{$this->module_global}.{$name} = ".json_encode($value).";</script>";
     }
     
-    private function includeJS($path) {
-        echo '<script src="' . $this->getUrl($path) . '"></script>';
+    private function includeJs($path) {
+        echo "<script src={$this->getUrl($path)}></script>";
     }
     
     private function includeHilightJS() {
