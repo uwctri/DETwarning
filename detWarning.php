@@ -7,7 +7,6 @@ use REDCap;
 
 class detWarning extends AbstractExternalModule {
     
-    private $module_prefix = 'det_warning';
     private $module_global = 'detWarning';
     
     public function redcap_every_page_top($project_id) {
@@ -62,7 +61,7 @@ class detWarning extends AbstractExternalModule {
                 }
             }
         }
-        ExternalModules::setProjectSetting($this->module_prefix, $project_id, 'json', json_encode($json));
+        ExternalModules::setProjectSetting($this->PREFIX, $project_id, 'json', json_encode($json));
         return $json;
     }
     
@@ -73,7 +72,7 @@ class detWarning extends AbstractExternalModule {
     
     private function initGlobal() {
         $data = json_encode([
-            "prefix" => $this->module_prefix,
+            "prefix" => $this->PREFIX,
         ]);
         echo "<script>var {$this->module_global} = {$data};</script>";
     }
