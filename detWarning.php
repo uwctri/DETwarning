@@ -2,7 +2,6 @@
 
 namespace UWMadison\detWarning;
 use ExternalModules\AbstractExternalModule;
-use ExternalModules\ExternalModules;
 use REDCap;
 
 class detWarning extends AbstractExternalModule {
@@ -13,10 +12,10 @@ class detWarning extends AbstractExternalModule {
         $this->initGlobal();
         
         // Check if we are on the design page
-        if (strpos(PAGE, 'Design/online_designer.php') !== false && $project_id != NULL && $_GET['page']) {
+        if ( $this->isPage('Design/online_designer.php') && $project_id != NULL && $_GET['page']) {
             $json = $this->loadJSON($_GET['page']);
             // Only parse through the DET once a day, doing it every time for any large DET would be slow
-            if ( empty($json) || empty($json["file"]) || ((strtotime('-1 day') - strtotime($json['loadDate'])) > 0) ) {
+            if ( True|| empty($json) || empty($json["file"]) || ((strtotime('-1 day') - strtotime($json['loadDate'])) > 0) ) {
                 $json = $this->parseDET($project_id);
             }
             $this->passArgument('config',$json);
@@ -25,7 +24,7 @@ class detWarning extends AbstractExternalModule {
         }
         
         // Custom Config page
-        if (strpos(PAGE, 'manager/project.php') !== false && $project_id != NULL) {
+        if ( $this->isPage('ExternalModules/manager/project.php') && $project_id != NULL) {
             $this->includeJS('config.js');
         }
     }
@@ -33,7 +32,7 @@ class detWarning extends AbstractExternalModule {
     private function parseDET($project_id) {
         global $data_entry_trigger_url;
         
-        $base = explode('redcap_', APP_PATH_DOCROOT)[0];
+        $base = explode('redcap', APP_PATH_DOCROOT)[0];
         $file = $base . str_replace('/',DIRECTORY_SEPARATOR,trim($data_entry_trigger_url,'/'));
 
         $json = [
@@ -61,7 +60,7 @@ class detWarning extends AbstractExternalModule {
                 }
             }
         }
-        ExternalModules::setProjectSetting($this->PREFIX, $project_id, 'json', json_encode($json));
+        $this->setProjectSetting('json', json_encode($json));
         return $json;
     }
     
@@ -72,7 +71,7 @@ class detWarning extends AbstractExternalModule {
     
     private function initGlobal() {
         $data = json_encode([
-            "prefix" => $this->PREFIX,
+            "prefix" => $this->getPrefix()
         ]);
         echo "<script>var {$this->module_global} = {$data};</script>";
     }

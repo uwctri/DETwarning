@@ -64,7 +64,7 @@ detWarning.functions.decorateDETwarning = function() {
     
     // Some slower computers might have an issue with the JS load. Run this again if so.
     if ( !$("#detWarnTop").length || !$("#detWarnBottom").length ) {
-        setTimeout( decorateDETwarning, 100 );
+        setTimeout( detWarning.functions.decorateDETwarning, 100 );
     }
 }
 
