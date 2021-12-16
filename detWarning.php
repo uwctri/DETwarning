@@ -15,7 +15,7 @@ class detWarning extends AbstractExternalModule {
         if ( $this->isPage('Design/online_designer.php') && $project_id != NULL && $_GET['page']) {
             $json = $this->loadJSON($_GET['page']);
             // Only parse through the DET once a day, doing it every time for any large DET would be slow
-            if ( True|| empty($json) || empty($json["file"]) || ((strtotime('-1 day') - strtotime($json['loadDate'])) > 0) ) {
+            if ( empty($json) || empty($json["file"]) || ((strtotime('-1 day') - strtotime($json['loadDate'])) > 0) ) {
                 $json = $this->parseDET($project_id);
             }
             $this->passArgument('config',$json);
