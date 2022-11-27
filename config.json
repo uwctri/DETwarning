@@ -6,13 +6,13 @@
         {
             "name": "Adam Nunez",
             "email": "Adam.Nunez@ctri.wisc.edu",
-            "institution": "UW Madison - Center for Tobacco Research and Intervention "
+            "institution": "UW Madison - Center for Tobacco Research and Intervention"
         }
     ],
     "permissions": [
         "redcap_every_page_top"
     ],
-    "framework-version": 8,
+    "framework-version": 9,
     "system-settings": [
         {
             "key": "hide-code",
@@ -33,6 +33,6 @@
         }
     ],
     "compatibility": {
-        "redcap-version-min": "12.0.0"
+        "redcap-version-min": "12.0.4"
     }
 }
